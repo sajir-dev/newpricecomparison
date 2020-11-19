@@ -15,6 +15,15 @@ type ItemInterface interface {
 // Subair: no definitions here
 // Subair: call initialise fn amazon, flipkart etc. object specific struct here. (no definition) and store the corresponding objects in a hashMap
 // key: market place, value: initialised struct
+//var (
+//	Market map[string]ItemInterface
+//)
+//func init{
+//Market = make(map[string]ItemInterface)
+// Market["amazon"] = amzon.initia()
+// Market["flipkart"] = flip.initia()
+	
+//}
 func GetItem(itemname string, marketplace string) (ItemInterface, error) {
 	var i ItemInterface
 	switch marketplace {
