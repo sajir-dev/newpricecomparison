@@ -14,8 +14,8 @@ func CreateItem() *Amazon {
 	return &Amazon{MarketPlace: "amazon"}
 }
 
-// GetProductDetails ...
-func (a *Amazon) GetItem(itemName string) (string, error) {
+// GetItem ...
+func (a *Amazon) GetItem(itemName string) (interface{}, error) {
 	productData, err := services.GetProductDetails(itemName)
 	return productData, err
 }

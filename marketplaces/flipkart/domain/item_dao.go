@@ -1,12 +1,10 @@
 package domain
 
 import (
-	"encoding/json"
-
 	"../../../config"
 )
 
-// FlipkartItem ...
+// ProductData ...
 type ProductData struct {
 	ItemID      string  `json:"itemid"`
 	ItemName    string  `json:"item"`
@@ -18,15 +16,17 @@ type ProductData struct {
 }
 
 // GetItem returns a specific item if available
-func (p *ProductData) GetItem(itemname string) (string, error) {
+func (p *ProductData) GetItem(itemname string) (*ProductData, error) {
 	row := config.DB.QueryRow(`select * from items join marketplace using(itemid) where (marketplace = 'flipkart' and name = '` + itemname + `');`)
 
-	var item ProductData
+	var item *ProductData = new(ProductData)
 	err := row.Scan(&item.ItemID, &item.ItemName, &item.Price, &item.Brand, &item.Description, &item.Rating, &item.MarketPlace)
 	if err != nil {
-		return "", err
+		// return "", err
+		return nil, err
 	}
 
-	itemJSON, _ := json.Marshal(item)
-	return string(itemJSON), nil
+	// itemJSON, _ := json.Marshal(item)
+	// return string(itemJSON), nil
+	return item, nil
 }

@@ -14,8 +14,8 @@ func CreateItem() *Flipkart {
 	return &Flipkart{MarketPlace: "flipkart"}
 }
 
-// GetProductDetails ...
-func (f *Flipkart) GetItem(itemName string) (string, error) {
+// GetItem ...
+func (f *Flipkart) GetItem(itemName string) (interface{}, error) {
 	productData, err := services.GetProductDetails(itemName)
 	return productData, err
 }
