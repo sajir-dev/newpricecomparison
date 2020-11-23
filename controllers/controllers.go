@@ -1,21 +1,29 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 
 	"../services"
 	"github.com/gin-gonic/gin"
 )
 
+// ItemReq ...
 type ItemReq struct {
 	ItemName    string `json:"item_name"`
-	MarketPlace string `json:"market_place"`
+	MarketPlace string `json:"marketplace"`
 }
 
+// GetItem ...
 func GetItem(c *gin.Context) {
 	var req ItemReq
 	err := c.ShouldBindJSON(&req)
-	if err != nil {
+	fmt.Println("itemname:", req)
+	mp := c.Request.Header.Get("marketplace")
+	fmt.Println("marketplace", mp)
+	req = ItemReq{req.ItemName, mp}
+	fmt.Println(req)
+	if len(req.ItemName) == 0 || len(req.MarketPlace) == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "Bad request",
 		})

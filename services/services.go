@@ -1,10 +1,10 @@
 package services
 
 import (
-	"encoding/json"
+	"fmt"
 
-	amazon "../marketplaces/amazon/services"
-	flipkart "../marketplaces/flipkart/services"
+	amazon "../marketplaces/amazon/controllers"
+	flipkart "../marketplaces/flipkart/controllers"
 )
 
 // TODO: change the name to MarketPlaceClient
@@ -24,27 +24,40 @@ type ItemInterface interface {
 // Market["flipkart"] = flip.initia()
 
 //}
-func GetItem(itemname string, marketplace string) (ItemInterface, error) {
-	var i ItemInterface
-	switch marketplace {
-	case "amazon":
-		i = amazon.CreateItem()
-	case "flipkart":
-		i = flipkart.CreateItem()
-	}
+
+// func init() {
+// 	MarketPlaceObjects := Map["string"]{}
+// }
+
+func GetItem(itemname string, marketplace string) (string, error) {
+	// var i ItemInterface
+	// switch marketplace {
+	// case "amazon":
+	// 	i = amazon.CreateItem()
+	// case "flipkart":
+	// 	i = flipkart.CreateItem()
+	// }
 	// a1 := amazon.CreateItem()
 	// f1 := flipkart.CreateItem()
-	dataString, err := i.GetItem(itemname)
+
+	marketPlaceObj := map[string]ItemInterface{"amazon": amazon.CreateItem(), "flipkart": flipkart.CreateItem()}
+
+	dataString, err := marketPlaceObj[marketplace].GetItem(itemname)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
 	// var data *ItemInterface
 
-	err = json.Unmarshal([]byte(dataString), &i)
-	if err != nil {
-		return nil, err
-	}
+	fmt.Println(dataString)
+	// err = json.Unmarshal([]byte(dataString), &i)
+	// if err != nil {
+	// 	return nil, err
+	// }
 
-	return i, nil
+	return dataString, nil
 }
+
+// POST: GetProductDetails(itemid), HEADER: marketplace define struct for this id
+// Struct to hold product response data the one i have now
+// marketplace struct needs just a string field marketplace
