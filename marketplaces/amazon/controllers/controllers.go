@@ -10,7 +10,7 @@ type Amazon struct {
 }
 
 // CreateItem ...
-func CreateItem() *Amazon {
+func InitAmazon() *Amazon {
 	return &Amazon{MarketPlace: "amazon"}
 }
 

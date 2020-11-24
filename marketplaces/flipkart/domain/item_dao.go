@@ -1,7 +1,7 @@
 package domain
 
 import (
-	"../../../config"
+	config "../../../utils"
 )
 
 // ProductData ...

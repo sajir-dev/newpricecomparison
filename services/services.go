@@ -2,9 +2,6 @@ package services
 
 import (
 	"fmt"
-
-	amazon "../marketplaces/amazon/controllers"
-	flipkart "../marketplaces/flipkart/controllers"
 )
 
 // TODO: change the name to MarketPlaceClient
@@ -29,6 +26,8 @@ type ItemInterface interface {
 // 	MarketPlaceObjects := Map["string"]{}
 // }
 
+// TODO: accept the type from controller
+
 func GetItem(itemname string, marketplace string) (interface{}, error) {
 	var i interface{}
 	// switch marketplace {
@@ -40,9 +39,11 @@ func GetItem(itemname string, marketplace string) (interface{}, error) {
 	// a1 := amazon.CreateItem()
 	// f1 := flipkart.CreateItem()
 
-	marketPlaceObj := map[string]ItemInterface{"amazon": amazon.CreateItem(), "flipkart": flipkart.CreateItem()}
+	mpObj := marketplace.GetMarketPlace(mp)
 
-	i, err := marketPlaceObj[marketplace].GetItem(itemname)
+	// marketPlaceObj := map[string]ItemInterface{"amazon": amazon.CreateItem(), "flipkart": flipkart.CreateItem()}
+
+	i, err := mpObj.GetItem(itemname)
 	if err != nil {
 		return "", err
 	}
