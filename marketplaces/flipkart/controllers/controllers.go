@@ -9,8 +9,8 @@ type Flipkart struct {
 	MarketPlace string `json:"marketplace"`
 }
 
-// CreateItem ...
-func CreateItem() *Flipkart {
+// InitFlipkart ...
+func InitFlipkart() *Flipkart {
 	return &Flipkart{MarketPlace: "flipkart"}
 }
 

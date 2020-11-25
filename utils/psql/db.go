@@ -1,5 +1,5 @@
 // package to database properties
-package mysqlconfig
+package psqlconfig
 
 import (
 	"database/sql"

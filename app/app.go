@@ -2,6 +2,8 @@ package app
 
 import (
 	"../controllers"
+	marketplace "../marketplaces"
+	psqlconfig "../utils/psql"
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,4 +15,9 @@ func StartApp() {
 	router.POST("/", controllers.GetItem)
 
 	router.Run(":8080")
+}
+
+func init() {
+	psqlconfig.Init()
+	marketplace.InitializeClient()
 }

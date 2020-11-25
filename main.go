@@ -4,11 +4,10 @@ import (
 	"fmt"
 
 	"./app"
-	marketplace "./marketplaces"
 )
 
 func main() {
-	// app.StartApp()
+	app.StartApp()
 	fmt.Println("app starting...")
 }
 
@@ -23,8 +22,7 @@ func main() {
 // #8 learn memory allocation in go
 // #9
 
-func init() {
-	mysqlconfig.Init()
-	marketplace.InitializeClient()
-	app.StartApp()
-}
+// #1 write a go script to add 100k products into the table with keys - itemid(unique), itemname, category, price(random), weight(random), qty
+// #2 api for 4 category total weight, total price, avg  price (getCategoryPriceWeight) - CategoryName(list), username
+// #3 use channels for better UX (streaming function in gin)
+// #4

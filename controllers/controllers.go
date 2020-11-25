@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 
 	"../services"
@@ -22,15 +23,16 @@ func GetItem(c *gin.Context) {
 	// fmt.Println("marketplace", mp)
 
 	// req = ItemReq{req.ItemName, mp}
-	formRequest := c.Keys["form_data"].(*ItemReq)
+	formRequest, _ := c.GetPostForm("item_name")
+	fmt.Println(formRequest)
 	// check more about c.Keys
-	// fmt.Println(req)
-	// if len(req.ItemName) == 0 || len(req.MarketPlace) == 0 {
-	// 	c.JSON(http.StatusBadRequest, gin.H{
-	// 		"error": "Bad request",
-	// 	})
-	// 	return
-	// }
+	fmt.Println(formRequest)
+	if len(mp) == 0 || len(formRequest) == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Bad request",
+		})
+		return
+	}
 
 	// itemData, err := services.GetItem(req.ItemName, req.MarketPlace)
 	itemData, err := services.GetItem(formRequest, mp)

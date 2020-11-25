@@ -2,6 +2,8 @@ package services
 
 import (
 	"fmt"
+
+	marketplace "../marketplaces"
 )
 
 // TODO: change the name to MarketPlaceClient
@@ -28,7 +30,7 @@ type ItemInterface interface {
 
 // TODO: accept the type from controller
 
-func GetItem(itemname string, marketplace string) (interface{}, error) {
+func GetItem(itemname string, mp string) (interface{}, error) {
 	var i interface{}
 	// switch marketplace {
 	// case "amazon":
