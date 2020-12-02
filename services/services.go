@@ -8,7 +8,7 @@ import (
 
 // TODO: change the name to MarketPlaceClient
 type ItemInterface interface {
-	GetItem(string) (interface{}, error)
+	GetProduct(string) (interface{}, error)
 }
 
 // TODO: no definitions here
@@ -45,7 +45,7 @@ func GetItem(itemname string, mp string) (interface{}, error) {
 
 	// marketPlaceObj := map[string]ItemInterface{"amazon": amazon.CreateItem(), "flipkart": flipkart.CreateItem()}
 
-	i, err := mpObj.GetItem(itemname)
+	i, err := mpObj.GetProduct(itemname)
 	if err != nil {
 		return "", err
 	}

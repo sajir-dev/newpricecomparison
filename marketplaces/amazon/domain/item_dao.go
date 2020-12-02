@@ -16,8 +16,9 @@ type ProductData struct {
 }
 
 // GetItem returns a specific item if available
-func (p *ProductData) GetItem(itemname string) (*ProductData, error) {
-	row := psqlconfig.DB.QueryRow(`select * from items join marketplace using(itemid) where (marketplace = 'amazon' and name = '` + itemname + `');`)
+func (p *ProductData) GetProduct(itemname string) (*ProductData, error) {
+	// row := psqlconfig.DB.QueryRow(`select * from products join marketplace using(itemid) where (marketplace = 'amazon' and name = '` + itemname + `');`)
+	row := psqlconfig.DB.QueryRow(`select * from products where (marketplace = 'amazon' and itemname = '` + itemname + `');`)
 
 	var item *ProductData = new(ProductData)
 	err := row.Scan(&item.ItemID, &item.ItemName, &item.Price, &item.Brand, &item.Description, &item.Rating, &item.MarketPlace)

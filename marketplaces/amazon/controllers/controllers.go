@@ -14,8 +14,8 @@ func InitAmazon() *Amazon {
 	return &Amazon{MarketPlace: "amazon"}
 }
 
-// GetItem ...
-func (a *Amazon) GetItem(itemName string) (interface{}, error) {
+// GetProduct ...
+func (a *Amazon) GetProduct(itemName string) (interface{}, error) {
 	productData, err := services.GetProductDetails(itemName)
 	return productData, err
 }

@@ -7,7 +7,7 @@ import (
 
 // TODO: change the name to MarketPlaceClient
 type MarketPlaceClient interface {
-	GetItem(string) (interface{}, error)
+	GetProduct(string) (interface{}, error)
 }
 
 var MarketPlaceObj map[string]MarketPlaceClient
