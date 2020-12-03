@@ -13,8 +13,12 @@ func StartApp() {
 		c.String(200, "Hey I'm working")
 	})
 	router.POST("/", controllers.GetItem)
+	router.GET("/catweight", controllers.GetCategoryWeight)
+	router.GET("/catprice", controllers.GetCategoryPrice)
+	router.GET("/catavg", controllers.GetCategoryAvg)
+	router.GET("/listcat", controllers.ListCategories)
 
-	router.Run(":8080")
+	router.Run(":8030")
 }
 
 func init() {

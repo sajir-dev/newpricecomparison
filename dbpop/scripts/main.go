@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	"math"
 	"math/rand"
@@ -28,15 +29,40 @@ func init() {
 }
 
 func main() {
-	createItems()
+	// createItems()
+	// fmt.Println(GetAvgCategoryPrice("cat10034"))
+	// createItems2()
 
 	// for v := range c {
 	// 	fmt.Println(v)
 	// }
 
+	c := ListCategories()
+	for v := range c {
+		fmt.Println(v)
+	}
 }
 
 func createItems() {
+	for j := 10; j < 100000; j++ {
+		rand.Seed(int64(j * 1000))
+		itemname := `item100` + fmt.Sprint(rand.Intn(1000000))
+		price := math.Floor(float64(rand.Float32()*100*100)) / 100
+		category := `cat100` + fmt.Sprint(rand.Intn(100))
+		weight := math.Floor(float64(rand.Float32()*15*100) / 100)
+		quantity := rand.Intn(200)
+
+		row, err := DB.Exec(`INSERT INTO products2(itemname, category, price, weight, quantity) values ($1, $2, $3, $4, $5);`, itemname, category, price, weight, quantity)
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+		fmt.Println(row.RowsAffected())
+	}
+	return
+}
+
+func createItems2() {
 	// INSERT INTO products(ITEMNAME, PRICE, BRAND, DESCRIPTION, RATING, MARKETPLACE) values ('demo2', 12.2, 'efaef', 'demo descriptionfewfcves', 4.5, 'amazon');
 	// var c chan int
 	for j := 1001; j < 100000; j++ {
@@ -70,6 +96,109 @@ func createItems() {
 	return
 }
 
+func GetTotalWeightOfTheCategory(category string) (float64, error) {
+	c := make(chan float64)
+	var sum float64
+	go func() {
+		var weight float64
+		q, err := DB.Query(`select weight from products2 where category = '` + category + `';`)
+		if err != nil {
+			return
+		}
+		for q.Next() {
+			q.Scan(&weight)
+			c <- weight
+			// fmt.Println(<-c)
+		}
+		close(c)
+	}()
+	for v := range c {
+		sum += v
+	}
+	if sum == 0 {
+		return sum, errors.New("database error")
+	}
+	return sum, nil
+}
+
+func GetTotalPriceOfTheCategory(category string) (float64, error) {
+	c := make(chan float64)
+	var sum float64
+	go func() {
+		var weight float64
+		q, err := DB.Query(`select price from products2 where category = '` + category + `';`)
+		if err != nil {
+			return
+		}
+		for q.Next() {
+			q.Scan(&weight)
+			c <- weight
+			// fmt.Println(<-c)
+		}
+		close(c)
+	}()
+	for v := range c {
+		sum += v
+	}
+	if sum == 0 {
+		return sum, errors.New("database error")
+	}
+	return sum, nil
+}
+
+func GetTotalQtyOfTheCategory(category string) (float64, error) {
+	c := make(chan float64)
+	var sum float64
+	go func() {
+		var weight float64
+		q, err := DB.Query(`select quantity from products2 where category = '` + category + `';`)
+		if err != nil {
+			return
+		}
+		for q.Next() {
+			q.Scan(&weight)
+			c <- weight
+			// fmt.Println(<-c)
+		}
+		close(c)
+	}()
+	for v := range c {
+		sum += v
+	}
+	if sum == 0 {
+		return sum, errors.New("database error")
+	}
+	return sum, nil
+}
+
+func GetAvgCategoryPrice(category string) (float64, error) {
+	qty, err := GetTotalQtyOfTheCategory(category)
+	if err != nil {
+		return 0, err
+	}
+	total, err := GetTotalPriceOfTheCategory(category)
+	if err != nil {
+		return 0, err
+	}
+	return (total / qty), nil
+}
+
+func ListCategories() chan string {
+	cs := make(chan string)
+	go func() {
+		q, _ := DB.Query(`select distinct category from products2;`)
+		fmt.Println(q)
+		for q.Next() {
+			var c string
+			q.Scan(&c)
+			cs <- c
+			// fmt.Println(<-cs)
+		}
+		close(cs)
+	}()
+	return cs
+}
+
 // ItemID, ItemName, Price, Brand, Description, Rating, MarketPlace
 
 // CREATE TABLE "products" (
@@ -80,4 +209,13 @@ func createItems() {
 // 	"description" varchar,
 // 	"rating" decimal,
 // 	"marketplace" varchar
+// );
+
+// CREATE TABLE "products2" (
+// 	"id" bigserial PRIMARY KEY,
+// 	"itemname" varchar NOT NULL,
+// 	"category" varchar NOT NULL,
+// 	"price" decimal,
+// 	"weight" decimal,
+// 	"quantity" decimal
 // );

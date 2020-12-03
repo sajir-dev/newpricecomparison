@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"io"
 	"net/http"
 
 	"../services"
@@ -44,4 +45,78 @@ func GetItem(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, itemData)
+}
+
+func GetCategoryWeight(c *gin.Context) {
+	category, isNot := c.GetPostForm("category")
+	if !isNot {
+		c.JSON(
+			http.StatusBadRequest,
+			gin.H{"error": "Bad Request"})
+		return
+	}
+	wt, err := services.GetCategoryWeight(category)
+	if err != nil {
+		c.JSON(
+			http.StatusInternalServerError,
+			gin.H{"error": err})
+		return
+	}
+	c.JSON(
+		http.StatusOK,
+		gin.H{"total weight": wt})
+	return
+}
+
+func GetCategoryPrice(c *gin.Context) {
+	category, isNot := c.GetPostForm("category")
+	if !isNot {
+		c.JSON(
+			http.StatusBadRequest,
+			gin.H{"error": "Bad Request"})
+		return
+	}
+	price, err := services.GetCategoryPrice(category)
+	if err != nil {
+		c.JSON(
+			http.StatusInternalServerError,
+			gin.H{"error": err})
+		return
+	}
+	c.JSON(
+		http.StatusOK,
+		gin.H{"total price": price})
+	return
+}
+
+func GetCategoryAvg(c *gin.Context) {
+	category, isNot := c.GetPostForm("category")
+	if !isNot {
+		c.JSON(
+			http.StatusBadRequest,
+			gin.H{"error": "Bad Request"})
+		return
+	}
+	price, err := services.GetCategoryAvg(category)
+	if err != nil {
+		c.JSON(
+			http.StatusInternalServerError,
+			gin.H{"error": err})
+		return
+	}
+	c.JSON(
+		http.StatusOK,
+		gin.H{"category avg price": price})
+	return
+}
+
+func ListCategories(c *gin.Context) {
+	cs := services.ListCategories()
+	c.Stream(func(w io.Writer) bool {
+		if channel, ok := <-cs; ok {
+			c.SSEvent("listing category", channel)
+			return true
+		}
+		return false
+	})
 }

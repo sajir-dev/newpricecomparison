@@ -3,6 +3,7 @@ package services
 import (
 	"fmt"
 
+	"../domain"
 	marketplace "../marketplaces"
 )
 
@@ -64,3 +65,27 @@ func GetItem(itemname string, mp string) (interface{}, error) {
 // POST: GetProductDetails(itemid), HEADER: marketplace define struct for this id
 // Struct to hold product response data the one i have now
 // marketplace struct needs just a string field marketplace
+
+// GetCategoryWeight ...
+func GetCategoryWeight(category string) (float64, error) {
+	wt, err := domain.GetTotalWeightOfTheCategory(category)
+	return wt, err
+}
+
+// GetCategoryPrice ...
+func GetCategoryPrice(category string) (float64, error) {
+	total, err := domain.GetTotalPriceOfTheCategory(category)
+	return total, err
+}
+
+// GetCategoryAvg ...
+func GetCategoryAvg(category string) (float64, error) {
+	total, err := domain.AvgPriceOfTheCategory(category)
+	return total, err
+}
+
+// ListCategories ...
+func ListCategories() chan string {
+	c := domain.ListCategories()
+	return c
+}
