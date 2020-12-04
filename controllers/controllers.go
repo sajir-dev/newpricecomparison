@@ -47,6 +47,7 @@ func GetItem(c *gin.Context) {
 	c.JSON(http.StatusOK, itemData)
 }
 
+// GetCategoryWeight ...
 func GetCategoryWeight(c *gin.Context) {
 	category, isNot := c.GetPostForm("category")
 	if !isNot {
@@ -68,6 +69,7 @@ func GetCategoryWeight(c *gin.Context) {
 	return
 }
 
+// GetCategoryPrice ...
 func GetCategoryPrice(c *gin.Context) {
 	category, isNot := c.GetPostForm("category")
 	if !isNot {
@@ -89,6 +91,7 @@ func GetCategoryPrice(c *gin.Context) {
 	return
 }
 
+// GetCategoryAvg ...
 func GetCategoryAvg(c *gin.Context) {
 	category, isNot := c.GetPostForm("category")
 	if !isNot {
@@ -110,11 +113,13 @@ func GetCategoryAvg(c *gin.Context) {
 	return
 }
 
+// ListCategories ...
 func ListCategories(c *gin.Context) {
 	cs := services.ListCategories()
+
 	c.Stream(func(w io.Writer) bool {
 		if channel, ok := <-cs; ok {
-			c.SSEvent("listing category", channel)
+			c.JSON(http.StatusOK, channel)
 			return true
 		}
 		return false

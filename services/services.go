@@ -8,9 +8,9 @@ import (
 )
 
 // TODO: change the name to MarketPlaceClient
-type ItemInterface interface {
-	GetProduct(string) (interface{}, error)
-}
+// type ItemInterface interface {
+// 	GetProduct(string) (interface{}, error)
+// }
 
 // TODO: no definitions here
 // TODO: call initialise fn amazon, flipkart etc. object specific struct here. (no definition) and store the corresponding objects in a hashMap

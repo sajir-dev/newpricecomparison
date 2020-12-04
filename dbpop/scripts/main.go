@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"math"
 	"math/rand"
+	"time"
 
 	_ "github.com/lib/pq"
 )
@@ -192,6 +193,7 @@ func ListCategories() chan string {
 			var c string
 			q.Scan(&c)
 			cs <- c
+			time.Sleep(time.Second * 10)
 			// fmt.Println(<-cs)
 		}
 		close(cs)

@@ -23,8 +23,29 @@ func main() {
 // #9
 
 // #1 write a go script to add 100k products into the table with keys - itemid(unique), itemname, category, price(random), weight(random), qty
-// #2 api for 4 category total weight, total price, avg  price (getCategoryPriceWeight) - CategoryName(list), username
+// #2 api for 4 category total weight, total price, avg  price (getCategoryPriceWeight) - CategoryName(list)
 // #3 use channels for better UX (streaming function in gin)
 // #4 auto migrate-(gorm, sqlc)
 
 // #5 db-indexing
+
+// #6 apply interface
+// #1 make four apis into one
+// #2 add marketplace in every header
+// #3 calculate the
+// #4 create model for req and res
+// #5 api models in a file
+
+// type CatRequest struct {
+// 	Categories []string
+// 	Username   string
+// }
+
+// type CatResponse struct {
+// 	CategoryInfo []CategoryData
+// 	Username string
+// }
+
+// type CategoryData struct {
+// 	// av wt, name, price
+// }

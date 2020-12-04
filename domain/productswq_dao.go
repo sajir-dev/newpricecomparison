@@ -3,6 +3,7 @@ package domain
 import (
 	"errors"
 	"fmt"
+	"time"
 
 	config "../utils"
 )
@@ -103,15 +104,29 @@ func AvgPriceOfTheCategory(category string) (float64, error) {
 func ListCategories() chan string {
 	cs := make(chan string)
 	go func() {
-		q, _ := config.DB.Query(`select distinct category from products2;`)
+		q, _ := config.DB.Query(`select distinct itemname from products2;`)
 		fmt.Println(q)
 		for q.Next() {
 			var c string
 			q.Scan(&c)
 			cs <- c
+			time.Sleep(time.Millisecond)
 			// fmt.Println(<-cs)
 		}
 		close(cs)
 	}()
+	// go test(cs)
 	return cs
 }
+
+// func test(cs chan string){
+// 	q, _ := config.DB.Query(`select distinct category from products2;`)
+// 	fmt.Println(q)
+// 	for q.Next() {
+// 		var c string
+// 		q.Scan(&c)
+// 		cs <- c
+// 		// fmt.Println(<-cs)
+// 	}
+// 	close(cs)
+// }
