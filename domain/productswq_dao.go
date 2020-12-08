@@ -3,7 +3,6 @@ package domain
 import (
 	"errors"
 	"fmt"
-	"time"
 
 	config "../utils"
 )
@@ -15,6 +14,14 @@ type ProductWQ struct {
 	Price       float64 `json:"price"`
 	Weight      float64 `json:"weight"`
 	Quantity    int     `json:"quantity"`
+}
+
+type CategoryData struct {
+	CategoryName string  `json:"category"`
+	TotalQty     float64 `json:"quantity"`
+	TotalWeight  float64 `json:"total_weight"`
+	TotalPrice   float64 `json:"total_price"`
+	AvgPrice     float64 `json:"avg_price"`
 }
 
 func GetTotalWeightOfTheCategory(category string) (float64, error) {
@@ -110,7 +117,7 @@ func ListCategories() chan string {
 			var c string
 			q.Scan(&c)
 			cs <- c
-			time.Sleep(time.Millisecond)
+			// time.Sleep(time.Millisecond)
 			// fmt.Println(<-cs)
 		}
 		close(cs)
@@ -130,3 +137,27 @@ func ListCategories() chan string {
 // 	}
 // 	close(cs)
 // }
+
+func GetCategoryInfo(category chan string) chan CategoryData {
+	var c chan CategoryData
+	for v := range category {
+		c <- GetCategoryData(v)
+	}
+	close(c)
+	return c
+}
+
+func GetCategoryData(category string) CategoryData {
+	var categoryData CategoryData
+	weight, _ := GetTotalWeightOfTheCategory(category)
+	qty, _ := GetTotalQtyOfTheCategory(category)
+	avg, _ := AvgPriceOfTheCategory(category)
+	price, _ := GetTotalPriceOfTheCategory(category)
+
+	// if err != nil {
+	// 	return nil, err
+	// }
+
+	categoryData = CategoryData{category, weight, qty, price, avg}
+	return categoryData
+}

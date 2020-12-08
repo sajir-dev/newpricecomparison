@@ -6,10 +6,17 @@ import (
 	"fmt"
 	"math"
 	"math/rand"
-	"time"
 
 	_ "github.com/lib/pq"
 )
+
+type CategoryData struct {
+	CategoryName string  `json:"category"`
+	TotalQty     float64 `json:"quantity"`
+	TotalWeight  float64 `json:"total_weight"`
+	TotalPrice   float64 `json:"total_price"`
+	AvgPrice     float64 `json:"avg_price"`
+}
 
 var DB *sql.DB
 var err error
@@ -42,6 +49,9 @@ func main() {
 	for v := range c {
 		fmt.Println(v)
 	}
+
+	fmt.Println(GetCategoryInfo(c))
+
 }
 
 func createItems() {
@@ -184,6 +194,18 @@ func GetAvgCategoryPrice(category string) (float64, error) {
 	return (total / qty), nil
 }
 
+func AvgPriceOfTheCategory(category string) (float64, error) {
+	total, err := GetTotalPriceOfTheCategory(category)
+	if err != nil {
+		return 0, err
+	}
+	qty, err := GetTotalQtyOfTheCategory(category)
+	if err != nil {
+		return 0, err
+	}
+	return (total / qty), nil
+}
+
 func ListCategories() chan string {
 	cs := make(chan string)
 	go func() {
@@ -193,12 +215,31 @@ func ListCategories() chan string {
 			var c string
 			q.Scan(&c)
 			cs <- c
-			time.Sleep(time.Second * 10)
+			// time.Sleep(time.Second * 10)
 			// fmt.Println(<-cs)
 		}
 		close(cs)
 	}()
 	return cs
+}
+
+func GetCategoryInfo(category chan string) chan CategoryData {
+	var c chan CategoryData
+	for v := range category {
+		c <- GetCategoryData(v)
+	}
+	close(c)
+	return c
+}
+
+func GetCategoryData(category string) CategoryData {
+	var categoryData CategoryData
+	weight, _ := GetTotalWeightOfTheCategory(category)
+	qty, _ := GetTotalQtyOfTheCategory(category)
+	avg, _ := AvgPriceOfTheCategory(category)
+	price, _ := GetTotalPriceOfTheCategory(category)
+	categoryData = CategoryData{category, weight, qty, price, avg}
+	return categoryData
 }
 
 // ItemID, ItemName, Price, Brand, Description, Rating, MarketPlace
