@@ -111,7 +111,7 @@ func AvgPriceOfTheCategory(category string) (float64, error) {
 func ListCategories() chan string {
 	cs := make(chan string)
 	go func() {
-		q, _ := config.DB.Query(`select distinct itemname from products2;`)
+		q, _ := config.DB.Query(`select distinct category from products2;`)
 		fmt.Println(q)
 		for q.Next() {
 			var c string
@@ -138,13 +138,25 @@ func ListCategories() chan string {
 // 	close(cs)
 // }
 
-func GetCategoryInfo(category chan string) chan CategoryData {
-	var c chan CategoryData
-	for v := range category {
-		c <- GetCategoryData(v)
-	}
-	close(c)
-	return c
+func GetCategoryInfo() chan CategoryData {
+	// var c chan CategoryData
+	// for v := range category {
+	// 	c <- GetCategoryData(v)
+	// }
+	// close(c)
+	// return c
+	cd := make(chan CategoryData)
+	c := ListCategories()
+	// fmt.Println("1")
+	go func() {
+		for v := range c {
+			// fmt.Println(v)
+			cd <- GetCategoryData(v)
+			// fmt.Println(<-cd)
+		}
+		close(cd)
+	}()
+	return cd
 }
 
 func GetCategoryData(category string) CategoryData {

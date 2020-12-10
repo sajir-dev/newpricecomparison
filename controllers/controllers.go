@@ -125,3 +125,17 @@ func ListCategories(c *gin.Context) {
 		return false
 	})
 }
+
+// ListCategories ...
+func ListCategoryInfo(c *gin.Context) {
+	cs := services.ListCategoryInfo()
+
+	c.Stream(func(w io.Writer) bool {
+		if channel, ok := <-cs; ok {
+			fmt.Println(channel)
+			c.JSON(http.StatusOK, channel)
+			return true
+		}
+		return false
+	})
+}

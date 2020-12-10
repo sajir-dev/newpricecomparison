@@ -89,3 +89,9 @@ func ListCategories() chan string {
 	c := domain.ListCategories()
 	return c
 }
+
+// ListCategoryInfo ...
+func ListCategoryInfo() chan domain.CategoryData {
+	c := domain.GetCategoryInfo()
+	return c
+}

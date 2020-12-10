@@ -17,6 +17,7 @@ func StartApp() {
 	router.GET("/catprice", controllers.GetCategoryPrice)
 	router.GET("/catavg", controllers.GetCategoryAvg)
 	router.GET("/listcat", controllers.ListCategories)
+	router.GET("/listcatinfo", controllers.ListCategoryInfo)
 
 	router.Run(":8030")
 }

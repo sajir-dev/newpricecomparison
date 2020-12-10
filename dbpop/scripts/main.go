@@ -45,12 +45,18 @@ func main() {
 	// 	fmt.Println(v)
 	// }
 
-	c := ListCategories()
-	for v := range c {
+	// c := ListCategories()
+	// for v := range c {
+	// 	fmt.Println(v)
+	// 	fmt.Println(GetCategoryData(v))
+	// }
+
+	cd := GetCategoryInfo()
+	for v := range cd {
 		fmt.Println(v)
 	}
 
-	fmt.Println(GetCategoryInfo(c))
+	// fmt.Println(GetCategoryInfo(c))
 
 }
 
@@ -223,13 +229,19 @@ func ListCategories() chan string {
 	return cs
 }
 
-func GetCategoryInfo(category chan string) chan CategoryData {
-	var c chan CategoryData
-	for v := range category {
-		c <- GetCategoryData(v)
-	}
-	close(c)
-	return c
+func GetCategoryInfo() chan CategoryData {
+	cd := make(chan CategoryData)
+	c := ListCategories()
+	// fmt.Println("1")
+	go func() {
+		for v := range c {
+			// fmt.Println(v)
+			cd <- GetCategoryData(v)
+			// fmt.Println("3")
+		}
+		close(cd)
+	}()
+	return cd
 }
 
 func GetCategoryData(category string) CategoryData {
